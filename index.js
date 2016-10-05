@@ -8,8 +8,9 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
+    var tmp = this;
     setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+      updateFunction(serve.apply(tmp, ["Happy Eating!", tmp.customer]))
     }, 2000)
   }
 }
@@ -24,13 +25,13 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var updateCakeStatus = updateStatus.bind(this);
+  mix.call(cake,updateCakeStatus)
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updatePieStatus = updateStatus.bind(this);
+  mix.call(pie,updatePieStatus);
 }
 
 function updateStatus(statusText) {
@@ -39,29 +40,42 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
+  var tmp = this;
   setTimeout(function() {
-    cool(updateFunction)
-  }, 2000)
-}
-
-function mix(updateFunction) {
-  var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
+    cool.call(tmp,updateFunction)
   }, 2000)
   updateFunction(status)
 }
 
+function mix(updateFunction) {
+  var status = "Mixing " + this.ingredients.join(", ")
+  var tmp = this;
+  setTimeout(function() {
+    bake.call(tmp,updateFunction)
+  }, 2000)
+  updateFunction(status)
+}
+
+var decorate = cake.decorate;
+
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
+  var tmp = this;
   setTimeout(function() {
-    this.decorate(updateFunction)
+    decorate.call(tmp,updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  var para = this.parentNode;
+  if (this.innerHTML == 'Make Cake') {
+    makeCake.call(para); 
+  } else {
+    makePie.call(para); 
+  }
 }
 
 function serve(message, customer) {
