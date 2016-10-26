@@ -71,15 +71,16 @@ function mix(updateFunction) {
     bake.call(item, updateFunction)
   }, 2000);
   updateFunction.call(item.div, status);
+  // updateFunction(status);
 }
 
 
 function makeDessert() {
   let whatToBake = this;
 
-  if (whatToBake.innerText === "Make Cake"){
+  if (whatToBake.innerHTML === "Make Cake"){
     makeCake.call(this.parentElement);
-  } else if (whatToBake.innerText === "Make Pie") {
+  } else if (whatToBake.innerHTML === "Make Pie") {
     makePie.call(this.parentElement);
   } else {
     alert("Don't have a recipe for that yet!!");
