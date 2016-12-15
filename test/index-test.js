@@ -77,7 +77,7 @@ describe('index', function() {
       })
     })
 
-    describe('mix', function() {
+    describe('mix', function(){
       it('calls the update function', function() {
         mix.call(pie, update)
         expect(
