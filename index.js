@@ -6,13 +6,15 @@ var cake = {
   bakeTime: "45 minutes",
   customer: "Tommy",
   decorate: function(updateFunction) {
+    debugger;
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout(()=> {
+      updateFunction(serve.apply(this,["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
+
 
 var pie = {
   name: "Apple Pie",
@@ -23,45 +25,65 @@ var pie = {
   customer: "Tammy"
 }
 
-function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var name;
+
+
+
+function makeCake(arg) {
+  // debugger;
+  // var updateCakeStatus;
+  // cake.decorate()
+  var update = updateStatus.bind(this)
+  debugger;
+  mix.call(cake, update)
+  // bake.call(cake, updateStatus)
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updateDessertStatus = updateStatus.bind(this)
+  debugger;
+  mix.call(pie, updateDessertStatus)
+  pie.decorate = cake.decorate.bind(pie)
 }
 
 function updateStatus(statusText) {
+  debugger;
   this.getElementsByClassName("status")[0].innerText = statusText
 }
 
-function bake(updateFunction) {
+function bake(updateStatus) {
+  debugger;
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
+  updateStatus(status)
+  setTimeout(()=> {
+    cool.call(this, updateStatus)
   }, 2000)
+
 }
 
 function mix(updateFunction) {
+  debugger;
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
+  setTimeout(()=>{
+    bake.call(this, updateFunction)
   }, 2000)
   updateFunction(status)
 }
 
+
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
+  setTimeout(()=> {
     this.decorate(updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
-function makeDessert() {
-  //add code here to decide which make... function to call
-  //based on which link was clicked
+function makeDessert(event) {
+  var cake = document.getElementById('cake')
+   var pie = document.getElementById('pie')
+   document.querySelector('a#piediv').click(makePie.call(pie))
+   document.querySelector('a#cakediv').click(makeCake.call(cake))
 }
 
 function serve(message, customer) {
@@ -73,6 +95,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //you shouldn't need to alter this function
   var cookLinks = document.getElementsByClassName("js-make")
   for(var i=0; i<cookLinks.length; i++) {
-    cookLinks[i].addEventListener("click", makeDessert)
+    cookLinks[i].addEventListener("click", function(event){makeDessert(event)})
   }
 });
