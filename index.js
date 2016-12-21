@@ -23,8 +23,7 @@ var pie = {
   customer: "Tammy"
 }
 
-// borrow .decorate() from cake
-pie.decorate = cake.decorate.bind(pie);
+// pie.decorate = cake.decorate.bind(pie);
 
 function makeCake() {
   var updateCakeStatus = updateStatus.bind(this);
@@ -34,6 +33,9 @@ function makeCake() {
 function makePie() {
   var updatePieStatus = updateStatus.bind(this)
   mix.call(pie, updatePieStatus)
+  // borrow .decorate() from cake
+  // because of the way the test is called, this line has to go in here
+  pie.decorate = cake.decorate.bind(pie);
 }
 
 function updateStatus(statusText) {
